@@ -2,6 +2,8 @@ package com.lambdaschool.school.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lambdaschool.school.model.Course;
+import com.lambdaschool.school.model.Instructor;
+import com.lambdaschool.school.model.Student;
 import com.lambdaschool.school.service.CourseService;
 import org.junit.After;
 import org.junit.Before;
@@ -20,6 +22,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -99,6 +102,35 @@ public class CourseControllerUnitTest
         ObjectMapper mapper = new ObjectMapper();
         String er = mapper.writeValueAsString(courseList);
 
+        System.out.println("***  Unit Test ***");
+        System.out.println("Expected " + er);
+        System.out.println("Actual   " + tr);
+        System.out.println("***  Unit Test ***");
+
         assertEquals("Rest API Returns List", er, tr);
+    }
+
+    // localhost:2019/courses/course/add -- post
+    @Test
+    public void addNewCourse() throws Exception
+    {
+        String apiUrl = "/courses/course/add";
+
+        // new course
+        ArrayList<Instructor> thisInst = new ArrayList<>();
+        String course55Name = "Number 55 DS -- test";
+        Course course55 = new Course(course55Name);
+
+        course55.setCourseid(55);
+
+        ObjectMapper mapper = new ObjectMapper();
+        String courseString = mapper.writeValueAsString(course55);
+
+        Mockito.when(courseService.save(any(Course.class))).thenReturn(course55);
+
+        RequestBuilder rb = MockMvcRequestBuilders.post(apiUrl)
+                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+                .content(courseString);
+        mockMvc.perform(rb).andExpect(status().isCreated()).andDo(MockMvcResultHandlers.print());
     }
 }

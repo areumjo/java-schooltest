@@ -43,8 +43,8 @@ public class CourseController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    // localhost:2019/courses/course -- post
-    @PostMapping(value = "/course",
+    // localhost:2019/courses/course/add -- post
+    @PostMapping(value = "/course/add",
             consumes = {"application/json"},
             produces = {"application/json"})
     public ResponseEntity<?> addNewCourse(@Valid @RequestBody Course newCourse) throws URISyntaxException
